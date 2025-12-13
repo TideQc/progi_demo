@@ -1,4 +1,5 @@
 node_modules/
 backend/vendor/
+backend/var/log/app.log
 frontend/node_modules/
 .env
