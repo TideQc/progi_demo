@@ -17,7 +17,7 @@ This repository contains a backend (PHP using Symfony components) and a frontend
 
 ## Run with Docker Compose
 
-```powershell
+```
 # from repo root
 docker-compose up --build
 ```
@@ -32,12 +32,10 @@ After startup:
 ## API Examples
 
 ### Calculate bid for common vehicle ($1000):
-```powershell
-$body = @{"price"=1000;"type"="common"} | ConvertTo-Json
-Invoke-WebRequest -Uri "http://localhost:8000/api/calculate" `
-  -Method POST `
-  -Headers @{"Content-Type"="application/json"} `
-  -Body $body
+```
+curl -X POST http://localhost:8000/api/calculate \
+  -H "Content-Type: application/json" \
+  -d '{"price":1000,"type":"common"}'
 ```
 
 **Response:**
@@ -55,22 +53,44 @@ Invoke-WebRequest -Uri "http://localhost:8000/api/calculate" `
 }
 ```
 
+### Calculate bid for luxury vehicle ($5000):
+```
+curl -X POST http://localhost:8000/api/calculate \
+  -H "Content-Type: application/json" \
+  -d '{"price":5000,"type":"luxury"}'
+```
+
+**Response:**
+```json
+{
+  "price": 5000,
+  "type": "luxury",
+  "fees": {
+    "basic_buyer_fee": 300,
+    "seller_special_fee": 150,
+    "association_fee": 50,
+    "storage_fee": 100
+  },
+  "total": 5600
+}
+```
+
 ## Local Development (without Docker)
 
 To install PHP dependencies locally (if not using Docker):
-```powershell
+```
 cd backend
 composer install
 ```
 
 To run backend unit tests (requires composer dev dependencies):
-```powershell
+```
 cd backend
 ./vendor/bin/phpunit
 ```
 
 To install frontend dependencies:
-```powershell
+```
 cd frontend
 npm install
 npm run build
@@ -87,7 +107,7 @@ DB_NAME: bidcalc
 ```
 
 To manually run migrations/schema init:
-```powershell
+```
 docker-compose exec db mysql -u user -ppass bidcalc < backend/sql/schema.sql
 ```
 
